@@ -62,7 +62,16 @@ app.delete("/customers/:id", async (req, res) => {
 app.put("/customers/:id", async (req, res) => {
     const id = req.params.id;
     const { name, email, document } = req.body;
-    const customer = await prisma.customers.update({
+
+    const customer = await prisma.customers.findUnique({
+        where: {id: id}
+    });
+
+    if (customer == null){
+        return res.status(404).json({message:"cliente não existe"})
+    }
+
+    const customerAtualizado = await prisma.customers.update({
         where: {id: id},
         data: {
             name,
@@ -70,7 +79,8 @@ app.put("/customers/:id", async (req, res) => {
             document
         }
     });
-    return res.json(customer);
+
+    return res.json(customerAtualizado);
 });
 
 app.listen(3000, () => console.log("Server is runing!"));
