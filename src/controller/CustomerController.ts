@@ -24,9 +24,6 @@ class CustomerController{
         try{
             const id = req.params.id;
             const {name, email, document} = req.body;
-            const customer = await prisma.customers.findUnique({
-                where: {id}
-            });
             const customerUpdated = await prisma.customers.update({
                 where: {id},
                 data:{
@@ -36,7 +33,7 @@ class CustomerController{
                 }
             });
             
-            return res.status(200).json(customer);
+            return res.status(200).json(customerUpdated);
         }catch(error){
             console.log(error);
             return res.status(500).json({error: error});
@@ -46,9 +43,6 @@ class CustomerController{
     async delete(req: Request, res: Response){
         try {
             const id = req.params.id;
-            const customer = await prisma.customers.findUnique({
-                where: {id}
-            });
             await prisma.customers.delete({
                 where: {id}
             });
